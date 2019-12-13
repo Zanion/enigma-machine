@@ -6,4 +6,8 @@
 
 """
 import os
+
+
 # Defaults
+ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
