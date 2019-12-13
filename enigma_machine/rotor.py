@@ -4,7 +4,7 @@ from enigma_machine.conf.defaults import ALPHABET
 class Rotor:
 
 
-    def __init__(self, wheel_id, wiring, notch, turnover, window="A"):
+    def __init__(self, wheel_id, wiring, notch, turnover, window="A", ring_setting="A"):
         """
 
         Args:
@@ -16,6 +16,7 @@ class Rotor:
         self.notch = notch.upper()
         self.turnover = turnover.upper()
         self.window = window.upper()
+        self.ring_setting = ring_setting.upper()
 
 
     @property
@@ -39,6 +40,7 @@ class Rotor:
         self.offset = (self.offset + 1) % 26
         self.window = ALPHABET[self.offset]
 
+        letter = self.wiring[(self.ring_setting + self.offset) % 26]
 
 
 
