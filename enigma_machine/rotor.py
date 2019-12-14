@@ -8,7 +8,7 @@ Wire = namedtuple("Wire", "l_contact r_contact")
 class Rotor:
 
 
-    def __init__(self, wheel_id, contact_mapping, notch, turnover, window="A", ring_setting="A"):
+    def __init__(self, wheel_id, contact_mapping, notch, window="A", ring_setting="A"):
         """
 
         Args:
@@ -17,10 +17,33 @@ class Rotor:
         """
         self.wheel_id = wheel_id
         self.wiring = contact_mapping
-        self.notch = notch.upper()
-        self.turnover = turnover.upper()
+        self.notch = notch
         self.window = window
         self.ring_setting = ring_setting
+
+
+    @property
+    def notch(self):
+        return self._notch
+
+
+    @property.setter
+    def notch(self, notch_pos):
+        """ Set the position of the notch on the ring
+
+        Sets the letter position of the notch on the ring for the rotor. Also
+        updates and records the turnover position (Letter visible in window)
+        when notch is active and triggers the next rotor to step.
+
+        Args:
+            notch_pos (str): Letter position of the notch on the ring
+
+        """
+        assert (len(notch_pos) == 1), 'Notch position must be single digit'
+        assert isinstance(notch_pos, str), 'Notch postion must be of type string'
+        self._notch = notch_pos.upper()
+        # Notch position is 8 letter positions advanced from turnover in window
+        self.turnover = ALPHABET[(ALPHABET.index(self._notch) - 8) % 26]
 
 
     @property
@@ -31,7 +54,7 @@ class Rotor:
     @property.setter
     def ring_setting(self, setting):
         assert (len(setting) == 1), 'Ring setting must be a single letter'
-        assert instanceof(setting, str), 'Ring setting must be of type string'
+        assert isinstance(setting, str), 'Ring setting must be of type string'
         self._ring_setting = setting.upper()
 
 
