@@ -1,7 +1,8 @@
 from collections import namedtuple
 from enigma_machine.conf.defaults import ALPHABET
 
-Wire = namedtuple("Wire", "r_contact l_contact")
+
+Wire = namedtuple("Wire", "l_contact r_contact")
 
 
 class Rotor:
@@ -58,19 +59,21 @@ class Rotor:
             Sorted list of wires indexed by mapping to ALPHABET
 
         """
-        if forward:
-            return sorted(self._wiring, key=lambda x: x.r_contact)
-        return sorted(self._wiring, key=lambda x: x.l_contact)
+        assert isinstance(forward, bool), 'forward must be of type boolean'
+        return sorted(self._wiring, key=lambda x: x.r_contact if forward else x.l_contact)
 
 
     @property.setter
     def wiring(self, contact_mapping):
         """ Set the wiring from a string mapping of ALPHABET onto inbound contacts
 
-        Iterates over the inbound contact_mapping of ALPHABET onto the inbound
-        contacts on the right of rotor. Populates a wiring array with all contacts
-        such that they can be encoded during forward or reversed passes on the
-        rotor.
+        Iterates over the provided mapping of ALPHABET from the right contacts through
+        the scrambled wiring onto the left contacts. Populates a wiring array with
+        all Wire mappings such that they can be used to encode letters during
+        forward or reverse passes on the rotor.
+
+        All wires are established disregarding the ring setting (equivalent to
+        assuming a default ring setting of A).
 
         Args:
             contact_mapping (string): String containing ordered mapping of contacts
@@ -81,7 +84,7 @@ class Rotor:
 
         self._wiring = []
         for idx in range(len(ALPHABET)):
-            self._wiring.append(Wire(ALPHABET[idx], contact_mapping[idx]))
+            self._wiring.append(Wire(contact_mapping[idx], ALPHABET[idx]))
 
 
     def step(self):
