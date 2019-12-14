@@ -64,6 +64,9 @@ class Rotor:
             contact_mapping (string): String containing ordered mapping of contacts
 
         """
+        assert (len(contact_mapping) == 26), 'Argument must contain 26 letters'
+        assert isinstance(contact_mapping, str), 'Argument must be of type string'
+
         self._wiring = []
         for idx in range(len(ALPHABET)):
             self._wiring.append(Wire(ALPHABET[idx], contact_mapping[idx]))
