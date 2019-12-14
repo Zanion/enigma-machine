@@ -48,8 +48,8 @@ class Rotor:
     def get_wiring(self, forward=True):
         """ Get sorted list of wire contacts based on direction of encoding
 
-        Returns a sorted list of wires based on direction of encoding based on
-        index mapping from ALPHABET onto the rotor wiring.
+        Returns a sorted list of wires based on direction of encoding mapped
+        from ALPHABET onto the rotor wiring.
 
         Args:
             forward (bool): Direction of encoding (Default: True)
