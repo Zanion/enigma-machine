@@ -18,8 +18,7 @@ class Rotor:
         self.wheel_id = wheel_id
         self.wiring = contact_mapping
         self.notch = notch
-        self.window = window
-        self.ring_setting = ring_setting
+        self.configure(window, ring_setting)
 
 
     @property
@@ -108,6 +107,18 @@ class Rotor:
         self._wiring = []
         for idx in range(len(ALPHABET)):
             self._wiring.append(Wire(contact_mapping[idx], ALPHABET[idx]))
+
+
+    def configure(self, window="A", ring_setting="A"):
+        """ Configure the rotor ring or window setting
+
+        Args:
+            window (str): Window setting for the rotor
+            ring_setting (str): Ring setting for the ring relative to wiring core
+
+        """
+        self.window = window
+        self.ring_setting = ring_setting
 
 
     def step(self):
