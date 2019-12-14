@@ -75,15 +75,26 @@ class Rotor:
     def step(self):
         """ Step the rotor position
 
-        TODO
+        Returns:
+            (bool) True if window is on a notched letter
 
         """
         # Increment the offset and wrap around to 0 after Z(25)
         self.offset = (self.offset + 1) % 26
         self.window = ALPHABET[self.offset]
-
-        letter = self.wiring[(self.ring_setting + self.offset) % 26]
-
+        return self.window==self.notch
 
 
+    def encode(self, letter, forward=True):
+        """ Encode a letter passing through the rotor
 
+        Args:
+            letter (str): Letter to encode
+            forward (bool): Encoding forward pass or reverse through the rotor
+
+        Returns:
+            (string) Letter encoded by the rotor wiring
+
+        """
+        wire = self.get_wiring(forward)[(self.ring_setting + self.offset) % 26]
+        return wire.contact_out if forward else wire.contact_in
