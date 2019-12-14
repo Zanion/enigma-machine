@@ -7,7 +7,7 @@ Wire = namedtuple("Wire", "contact_in contact_out")
 class Rotor:
 
 
-    def __init__(self, wheel_id, wiring, notch, turnover, window="A", ring_setting="A"):
+    def __init__(self, wheel_id, contact_mapping, notch, turnover, window="A", ring_setting="A"):
         """
 
         Args:
@@ -15,11 +15,23 @@ class Rotor:
 
         """
         self.wheel_id = wheel_id
-        self.wiring = wiring.upper()
+        self.wiring = contact_mapping
         self.notch = notch.upper()
         self.turnover = turnover.upper()
         self.window = window.upper()
-        self.ring_setting = ring_setting.upper()
+        self.ring_setting = ring_setting
+
+
+    @property
+    def ring_setting(self):
+        return self._ring_setting
+
+
+    @property.setter
+    def ring_setting(self, setting):
+        assert (len(setting) == 1), 'Ring setting must be a single letter'
+        assert instanceof(setting, str), 'Ring setting must be of type string'
+        self._ring_setting = setting.upper()
 
 
     @property
