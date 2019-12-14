@@ -1,7 +1,7 @@
 from collections import namedtuple
 from enigma_machine.conf.defaults import ALPHABET
 
-Wire = namedtuple("Wire", "contact_in contact_out")
+Wire = namedtuple("Wire", "r_contact l_contact")
 
 
 class Rotor:
@@ -18,7 +18,7 @@ class Rotor:
         self.wiring = contact_mapping
         self.notch = notch.upper()
         self.turnover = turnover.upper()
-        self.window = window.upper()
+        self.window = window
         self.ring_setting = ring_setting
 
 
@@ -59,8 +59,8 @@ class Rotor:
 
         """
         if forward:
-            return sorted(self._wiring, key=lambda x: x.contact_in)
-        return sorted(self._wiring, key=lambda x: x.contact_out)
+            return sorted(self._wiring, key=lambda x: x.r_contact)
+        return sorted(self._wiring, key=lambda x: x.l_contact)
 
 
     @property.setter
@@ -68,7 +68,7 @@ class Rotor:
         """ Set the wiring from a string mapping of ALPHABET onto inbound contacts
 
         Iterates over the inbound contact_mapping of ALPHABET onto the inbound
-        contacts on the rotor wiring. Populates a wiring array with all contacts
+        contacts on the right of rotor. Populates a wiring array with all contacts
         such that they can be encoded during forward or reversed passes on the
         rotor.
 
@@ -109,4 +109,4 @@ class Rotor:
 
         """
         wire = self.get_wiring(forward)[(self.ring_setting + self.offset) % 26]
-        return wire.contact_out if forward else wire.contact_in
+        return wire.l_contact if forward else wire.r_contact
