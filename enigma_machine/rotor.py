@@ -26,7 +26,7 @@ class Rotor:
         return self._notch
 
 
-    @property.setter
+    @notch.setter
     def notch(self, notch_pos):
         """ Set the position of the notch on the ring
 
@@ -50,7 +50,7 @@ class Rotor:
         return self._ring_setting
 
 
-    @property.setter
+    @ring_setting.setter
     def ring_setting(self, setting):
         assert (len(setting) == 1), 'Ring setting must be a single letter'
         assert isinstance(setting, str), 'Ring setting must be of type string'
@@ -62,10 +62,10 @@ class Rotor:
         return self._window
 
 
-    @property.setter
+    @window.setter
     def window(self, window):
         self._window = window.upper()
-        self.offset = ALPHABET.index(self.window)
+        self.core_offset = (ALPHABET.index(self.window) - ALPHABET.index(self.ring_setting)) % 26
 
 
     def get_wiring(self, forward=True):
@@ -85,7 +85,12 @@ class Rotor:
         return sorted(self._wiring, key=lambda x: x.r_contact if forward else x.l_contact)
 
 
-    @property.setter
+    @property
+    def wiring(self):
+        return self._wiring
+
+
+    @wiring.setter
     def wiring(self, contact_mapping):
         """ Set the wiring from a string mapping of ALPHABET onto inbound contacts
 
@@ -117,8 +122,10 @@ class Rotor:
             ring_setting (str): Ring setting for the ring relative to wiring core
 
         """
-        self.window = window
+        # Configure ring setting first
         self.ring_setting = ring_setting
+        # Then set window position
+        self.window = window
 
 
     def step(self):
@@ -128,9 +135,9 @@ class Rotor:
             (bool) True if window is on a notched letter
 
         """
-        # Increment the offset and wrap around to 0 after Z(25)
-        self.offset = (self.offset + 1) % 26
-        self.window = ALPHABET[self.offset]
+        # Increment the core_offset and wrap around to 0 after Z(25)
+        self.core_offset = (self.core_offset + 1) % 26
+        self.window = ALPHABET[self.core_offset]
         return self.window==self.notch
 
 
@@ -145,5 +152,11 @@ class Rotor:
             (string) Letter encoded by the rotor wiring
 
         """
-        wire = self.get_wiring(forward)[(self.ring_setting + self.offset) % 26]
-        return wire.l_contact if forward else wire.r_contact
+        wiring = self.get_wiring(forward)
+        print(wiring)
+        # Encryption shifted by ring_seting positon
+        print(f"CoreOffset: {self.core_offset}")
+        wire = wiring[self.core_offset]
+        print(wire)
+        letter = ALPHABET[ALPHABET.index(wire.l_contact if forward else wire.r_contact) - self.core_offset % 26]
+        return letter
