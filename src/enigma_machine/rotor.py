@@ -36,6 +36,7 @@ class Rotor:
     def alphabet(self, alphabet):
         assert isinstance(alphabet, str), "Alphabet must be string"
         assert len(alphabet) > 0, "Alphabet must be non-zero length"
+
         self._alphabet = alphabet
 
 
@@ -59,6 +60,7 @@ class Rotor:
         assert (len(notch_pos) == 1), 'Notch position must be single digit'
         assert isinstance(notch_pos, str), 'Notch postion must be of type string'
         assert notch_pos in self.alphabet, 'Notch position must be member of alphabet'
+
         self._notch = notch_pos.upper()
         # Notch position is 8 letter positions advanced from turnover in window
         self.turnover = self.alphabet[(self.alphabet.index(self._notch) - 8) % len(self.alphabet)]
@@ -74,6 +76,7 @@ class Rotor:
         assert (len(setting) == 1), 'Ring setting must be a single letter'
         assert isinstance(setting, str), 'Ring setting must be of type string'
         assert setting in self.alphabet, 'Ring setting must be member of alphabet'
+
         self._ring_setting = setting.upper()
 
 
@@ -87,6 +90,7 @@ class Rotor:
         assert (len(window) == 1), 'Window setting must be a single letter'
         assert isinstance(window, str), 'Window setting must be of type string'
         assert window in self.alphabet, 'Window setting must be member of alphabet'
+
         self._window = window.upper()
         # Offset the core wiring based on selected window position
         self.core_offset = (self.alphabet.index(self.window) - self.alphabet.index(self.ring_setting)) % len(self.alphabet)
@@ -176,3 +180,4 @@ class Rotor:
         output_index = encoded_letter - self.core_offset % len(self.alphabet)
         # Return letter associated with the output index
         return self.alphabet[output_index]
+

@@ -10,3 +10,4 @@ class PlugBoard:
 
     def swap(letter1, letter2):
         raise NotImplementedError
+

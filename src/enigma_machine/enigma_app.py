@@ -26,3 +26,4 @@ class EnigmaApp:
     def run(self):
         """Run Enigma application workflow"""
         print("Enigma machine running")
+
