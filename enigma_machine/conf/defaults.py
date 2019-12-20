@@ -2,7 +2,7 @@
 
     file:   defaults.py
     description:
-        Stores default assignments to qrltax configuration parameters
+        Stores default assignments to enigma machine configuration parameters
 
 """
 import os
@@ -10,4 +10,11 @@ import os
 
 # Defaults
 ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ALPHABET_LENGTH = len(ALPHABET)
 
+# Mapping assignments from ALPHABET onto rotor wiring.
+ROTOR_I_WIRE_MAPPING = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
+ROTOR_II_WIRE_MAPPING = "AJDKSIRUXBLHWTMCQGZNPYFVOE"
+ROTOR_III_WIRE_MAPPING = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
+ROTOR_IV_WIRE_MAPPING = "ESOVPZJAYQUIRHXLNFTGKDCMWB"
+ROTOR_V_WIRE_MAPPING = "VZBRGITYUPSDNHLXAWMJQOFECK"

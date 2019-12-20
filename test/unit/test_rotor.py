@@ -1,58 +1,55 @@
 import pytest
 from enigma_machine.rotor import Rotor
+from enigma_machine.conf.defaults import ALPHABET_LENGTH, ROTOR_I_WIRE_MAPPING
 
 
-def test_rotor_notch_setting():
-    rotor = Rotor("I", "EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Y")
+@pytest.fixture
+def rotor():
+    return Rotor("I", ROTOR_I_WIRE_MAPPING, "Y")
+
+
+def test_rotor_notch_setting(rotor):
     assert rotor.notch == "Y"
     assert rotor.turnover == "Q"
 
 
-def test_rotor_wiring():
-    wiring_0 = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    rotor = Rotor("I", wiring_0, "Y")
-    assert len(rotor.wiring) == 26
-    assert ''.join([ wire.l_contact for wire in rotor.get_wiring() ]) == wiring_0
+def test_rotor_wiring(rotor):
+    assert len(rotor.wiring) == ALPHABET_LENGTH
+    assert ''.join([ wire.l_contact for wire in rotor.get_wiring() ]) == ROTOR_I_WIRE_MAPPING
     inverse_wiring = "UWYGADFPVZBECKMTHXSLRINQOJ"
     assert ''.join([ wire.r_contact for wire in rotor.get_wiring(forward=False) ]) == inverse_wiring
 
 
-def test_encode_default_ring_setting():
+def test_encode_default_ring_setting(rotor):
     letter = "A"
-    wiring_0 = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    rotor = Rotor("I", wiring_0, "Y")
+    expected = "E"
 
-    out = rotor.encode(letter)
-    assert out == "E"
+    actual = rotor.encode(letter)
+    assert actual == expected
 
 
-def test_encode_offset_window():
+def test_encode_offset_window(rotor):
     letter = "A"
-    wiring_0 = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    rotor = Rotor("I", wiring_0, "Y")
+    expected = "J"
+
     rotor.configure(window="B")
+    actual = rotor.encode(letter)
+    assert actual == expected
 
-    out = rotor.encode(letter)
-    assert out == "J"
 
-
-def test_encode_B_ring_setting():
+def test_encode_B_ring_setting(rotor):
     letter = "A"
-    wiring_0 = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    rotor = Rotor("I", wiring_0, "Y")
+    expected = "K"
     rotor.configure(window="A", ring_setting="B")
+    actual = rotor.encode(letter)
+    assert actual == expected
 
-    out = rotor.encode(letter)
-    assert out == "K"
 
-
-def test_encode_F_ring_setting():
+def test_encode_F_ring_setting(rotor):
     letter = "A"
-    wiring_0 = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    rotor = Rotor("I", wiring_0, "Y")
+    expected = "W"
     rotor.configure(window="Y", ring_setting="F")
-
-    out = rotor.encode(letter)
-    assert out == "W"
+    actual = rotor.encode(letter)
+    assert actual == expected
 
 
