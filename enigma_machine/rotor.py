@@ -30,6 +30,18 @@ class Rotor:
 
 
     @property
+    def alphabet(self):
+        return self._alphabet
+
+
+    @alphabet.setter
+    def alphabet(self, alphabet):
+        assert isinstance(alphabet, str), "Alphabet must be string"
+        assert len(alphabet) > 0, "Alphabet must be non-zero length"
+        self._alphabet = alphabet
+
+
+    @property
     def notch(self):
         return self._notch
 
