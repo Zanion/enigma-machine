@@ -9,10 +9,17 @@ class Rotor:
 
 
     def __init__(self, wheel_id, contact_mapping, notch, window="A", ring_setting="A", alphabet=ALPHABET):
-        """
+        """ Initialize Rotor
 
         Args:
-            ...
+            wheel_id (str):  Identifier for the Rotor
+            contact_mapping (str):   Index ordered mapping from alphabet onto
+                                    inbound contacts
+            notch (str):    Letter associated with position of notch on Rotor ring
+            window (str):   Initial window position of Rotor
+            ring_setting (str): Rotor ring setting
+            alphabet (str): Alphabet used for Rotor
+
 
         """
         self.alphabet = alphabet
@@ -144,7 +151,10 @@ class Rotor:
                      rotor
 
         """
+        assert len(letter) == 1, 'Letter must be a single letter'
+        assert isinstance(letter, str), 'Letter must be of type str'
         assert isinstance(forward, bool), 'forward must be of type boolean'
+
         # Target wire for input letter shifted by positon of wiring core and
         # inverse wiring mapping if backward pass through rotor
         wiring_map = self.wiring if forward else sorted(self.wiring, key=lambda x: x.l_contact)
