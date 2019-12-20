@@ -130,13 +130,14 @@ class Rotor:
         """ Step the rotor position
 
         Returns:
-            (bool) True if window is on a notched letter
+            (bool) True if window is on a the turnover letter position
 
         """
         # Increment the core_offset and wrap around to 0 after after final letter
+        turned = self.window == self.turnover
         self.core_offset = (self.core_offset + 1) % len(self.alphabet)
         self.window = self.alphabet[self.core_offset]
-        return self.window == self.notch
+        return turned
 
 
     def encode(self, letter, forward=True):

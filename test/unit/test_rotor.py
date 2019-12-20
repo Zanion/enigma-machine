@@ -49,3 +49,14 @@ def test_encode_F_ring_setting(rotor):
     assert actual == expected
 
 
+def test_stepping_rotor(rotor):
+    assert rotor.step() == False, 'Turnover expected to be false for window setting A'
+    assert rotor.core_offset == 1
+    assert rotor.window == "B"
+
+
+def test_stepping_rotor_notched(rotor):
+    rotor.configure(window="Q")
+    assert rotor.step() == True, 'Turnover expected to be on Q for notch at Y'
+    assert rotor.core_offset == 17
+    assert rotor.window == "R"
