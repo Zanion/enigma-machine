@@ -8,13 +8,14 @@ Wire = namedtuple("Wire", "l_contact r_contact")
 class Rotor:
 
 
-    def __init__(self, wheel_id, contact_mapping, notch, window="A", ring_setting="A"):
+    def __init__(self, wheel_id, contact_mapping, notch, window="A", ring_setting="A", alphabet=ALPHABET):
         """
 
         Args:
             ...
 
         """
+        self.alphabet = alphabet
         self.wheel_id = wheel_id
         self.wiring = contact_mapping
         self.notch = notch
@@ -40,9 +41,10 @@ class Rotor:
         """
         assert (len(notch_pos) == 1), 'Notch position must be single digit'
         assert isinstance(notch_pos, str), 'Notch postion must be of type string'
+        assert notch_pos in self.alphabet, 'Notch position must be member of alphabet'
         self._notch = notch_pos.upper()
         # Notch position is 8 letter positions advanced from turnover in window
-        self.turnover = ALPHABET[(ALPHABET.index(self._notch) - 8) % 26]
+        self.turnover = self.alphabet[(self.alphabet.index(self._notch) - 8) % len(self.alphabet)]
 
 
     @property
@@ -54,6 +56,7 @@ class Rotor:
     def ring_setting(self, setting):
         assert (len(setting) == 1), 'Ring setting must be a single letter'
         assert isinstance(setting, str), 'Ring setting must be of type string'
+        assert setting in self.alphabet, 'Ring setting must be member of alphabet'
         self._ring_setting = setting.upper()
 
 
@@ -64,37 +67,25 @@ class Rotor:
 
     @window.setter
     def window(self, window):
+        assert (len(window) == 1), 'Window setting must be a single letter'
+        assert isinstance(window, str), 'Window setting must be of type string'
+        assert window in self.alphabet, 'Window setting must be member of alphabet'
         self._window = window.upper()
-        self.core_offset = (ALPHABET.index(self.window) - ALPHABET.index(self.ring_setting)) % 26
-
-
-    def get_wiring(self, forward=True):
-        """ Get sorted list of wire contacts based on direction of encoding
-
-        Returns a sorted list of wires based on direction of encoding mapped
-        from ALPHABET onto the rotor wiring.
-
-        Args:
-            forward (bool): Direction of encoding (Default: True)
-
-        Returns:
-            Sorted list of wires indexed by mapping to ALPHABET
-
-        """
-        assert isinstance(forward, bool), 'forward must be of type boolean'
-        return sorted(self._wiring, key=lambda x: x.r_contact if forward else x.l_contact)
+        # Offset the core wiring based on selected window position
+        self.core_offset = (self.alphabet.index(self.window) - self.alphabet.index(self.ring_setting)) % len(self.alphabet)
 
 
     @property
     def wiring(self):
-        return self._wiring
+        # Return forward pass mapping by default
+        return sorted(self._wiring, key=lambda x: x.r_contact)
 
 
     @wiring.setter
     def wiring(self, contact_mapping):
-        """ Set the wiring from a string mapping of ALPHABET onto inbound contacts
+        """ Set the wiring from a string mapping of alphabet onto inbound contacts
 
-        Iterates over the provided mapping of ALPHABET from the right contacts through
+        Iterates over the provided mapping of alphabet from the right contacts through
         the scrambled wiring onto the left contacts. Populates a wiring array with
         all Wire mappings such that they can be used to encode letters during
         forward or reverse passes on the rotor.
@@ -106,12 +97,12 @@ class Rotor:
             contact_mapping (string): String containing ordered mapping of contacts
 
         """
-        assert (len(contact_mapping) == 26), 'Argument must contain 26 letters'
+        assert (len(contact_mapping) == len(self.alphabet)), f"Argument must contain {len(self.alphabet)} letters"
         assert isinstance(contact_mapping, str), 'Argument must be of type string'
 
         self._wiring = []
-        for idx in range(len(ALPHABET)):
-            self._wiring.append(Wire(contact_mapping[idx], ALPHABET[idx]))
+        for idx in range(len(self.alphabet)):
+            self._wiring.append(Wire(contact_mapping[idx], self.alphabet[idx]))
 
 
     def configure(self, window="A", ring_setting="A"):
@@ -135,10 +126,10 @@ class Rotor:
             (bool) True if window is on a notched letter
 
         """
-        # Increment the core_offset and wrap around to 0 after Z(25)
-        self.core_offset = (self.core_offset + 1) % 26
-        self.window = ALPHABET[self.core_offset]
-        return self.window==self.notch
+        # Increment the core_offset and wrap around to 0 after after final letter
+        self.core_offset = (self.core_offset + 1) % len(self.alphabet)
+        self.window = self.alphabet[self.core_offset]
+        return self.window == self.notch
 
 
     def encode(self, letter, forward=True):
@@ -149,14 +140,18 @@ class Rotor:
             forward (bool): Encoding forward pass or reverse through the rotor
 
         Returns:
-            (string) Letter encoded by the rotor wiring
+            (string) Letter associated with the output index encoded by the
+                     rotor
 
         """
-        wiring = self.get_wiring(forward)
-        print(wiring)
-        # Encryption shifted by ring_seting positon
-        print(f"CoreOffset: {self.core_offset}")
-        wire = wiring[self.core_offset]
-        print(wire)
-        letter = ALPHABET[ALPHABET.index(wire.l_contact if forward else wire.r_contact) - self.core_offset % 26]
-        return letter
+        assert isinstance(forward, bool), 'forward must be of type boolean'
+        # Target wire for input letter shifted by positon of wiring core and
+        # inverse wiring mapping if backward pass through rotor
+        wiring_map = self.wiring if forward else sorted(self.wiring, key=lambda x: x.l_contact)
+        wire = wiring_map[self.core_offset]
+        # Get output letter from encoding on wiring core
+        encoded_letter = self.alphabet.index(wire.l_contact if forward else wire.r_contact)
+        # Get index of the output letter shifted by the position of the wiring core
+        output_index = encoded_letter - self.core_offset % len(self.alphabet)
+        # Return letter associated with the output index
+        return self.alphabet[output_index]

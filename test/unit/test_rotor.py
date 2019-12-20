@@ -1,6 +1,6 @@
 import pytest
 from enigma_machine.rotor import Rotor
-from enigma_machine.conf.defaults import ALPHABET_LENGTH, ROTOR_I_WIRE_MAPPING
+from enigma_machine.conf.defaults import ALPHABET, ROTOR_I_WIRE_MAPPING
 
 
 @pytest.fixture
@@ -14,16 +14,13 @@ def test_rotor_notch_setting(rotor):
 
 
 def test_rotor_wiring(rotor):
-    assert len(rotor.wiring) == ALPHABET_LENGTH
-    assert ''.join([ wire.l_contact for wire in rotor.get_wiring() ]) == ROTOR_I_WIRE_MAPPING
-    inverse_wiring = "UWYGADFPVZBECKMTHXSLRINQOJ"
-    assert ''.join([ wire.r_contact for wire in rotor.get_wiring(forward=False) ]) == inverse_wiring
+    assert len(rotor.wiring) == len(ALPHABET)
+    assert ''.join([ wire.l_contact for wire in rotor.wiring ]) == ROTOR_I_WIRE_MAPPING
 
 
 def test_encode_default_ring_setting(rotor):
     letter = "A"
     expected = "E"
-
     actual = rotor.encode(letter)
     assert actual == expected
 
@@ -31,7 +28,6 @@ def test_encode_default_ring_setting(rotor):
 def test_encode_offset_window(rotor):
     letter = "A"
     expected = "J"
-
     rotor.configure(window="B")
     actual = rotor.encode(letter)
     assert actual == expected
