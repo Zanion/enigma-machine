@@ -9,6 +9,15 @@ ROTOR_IV = Rotor("IV", ROTOR_IV_WIRE_MAPPING, "R")
 ROTOR_V = Rotor("V", ROTOR_V_WIRE_MAPPING, "H")
 
 
+ROTOR_DB = {
+    "I": ROTOR_I,
+    "II": ROTOR_II,
+    "III": ROTOR_III,
+    "IV": ROTOR_IV,
+    "V": ROTOR_V
+}
+
+
 class Enigma:
     """ Implementation of the Enigma I
 
@@ -19,26 +28,26 @@ class Enigma:
     """
 
 
-    def __init__(self, used_wheels=["III", "II", "I"], window_pos=['A', 'A', 'A']):
+    def __init__(self, used_rotors=["III", "II", "I"], window_pos=['A', 'A', 'A']):
 
-        assert len(used_wheels) == len(window_pos), "Count of used wheels and window selections must be equal"
+        assert len(used_rotors) == len(window_pos), "Count of used rotors and window selections must be equal"
 
-        self.wheels = [ ROTOR_III, ROTOR_II, ROTOR_I ]
+        self.rotors = [ ROTOR_III, ROTOR_II, ROTOR_I ]
 
 
     @property
     def windows(self):
-        return [ rotor.window for rotor in self.wheels ]
+        return [ rotor.window for rotor in self.rotors ]
 
 
     def step(self):
-        l_wheel, m_wheel, r_wheel = self.wheels
+        l_rotor, m_rotor, r_rotor = self.rotors
 
         # Step the rightmost rotor every step; Turnover mid rotor as req
-        # Doublestep midrotor on r_wheel turnover and on mid wheel turnover
-        if r_wheel.step() or m_wheel.window == m_wheel.turnover:
-            if m_wheel.step():
-                l_wheel.step()
+        # Doublestep midrotor on r_rotor turnover and on mid rotor turnover
+        if r_rotor.step() or m_rotor.window == m_rotor.turnover:
+            if m_rotor.step():
+                l_rotor.step()
 
 
     def configure_plugboard(self):
@@ -47,7 +56,7 @@ class Enigma:
 
     def configure_rotors(self, window_setting=["A", "A", "A"], ring_position=["A", "A", "A"]):
         for idx, setting in enumerate(zip(window_setting, ring_position)):
-            self.wheels[idx].configure(setting[0], setting[1])
+            self.rotors[idx].configure(setting[0], setting[1])
 
 
     def configure_rotor_order(self, rotor_order):

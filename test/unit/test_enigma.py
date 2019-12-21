@@ -7,12 +7,16 @@ def enigma():
     return Enigma()
 
 
-def test_rotor_doublestep(enigma):
+def test_rotor_step(enigma):
     enigma.configure_rotors(["K", "D", "O"])
     enigma.step()
     assert enigma.windows == ["K", "D", "P"]
     enigma.step()
     assert enigma.windows == ["K", "D", "Q"]
+
+
+def test_rotor_doublestep(enigma):
+    enigma.configure_rotors(["K", "D", "Q"])
     enigma.step()
     assert enigma.windows == ["K", "E", "R"]
     enigma.step()
