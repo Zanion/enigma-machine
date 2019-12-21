@@ -19,23 +19,35 @@ class Enigma:
     """
 
 
-    def __init__(self, used_wheels=["I", "II", "III"], window_pos=['A', 'A', 'A']):
+    def __init__(self, used_wheels=["III", "II", "I"], window_pos=['A', 'A', 'A']):
 
         assert len(used_wheels) == len(window_pos), "Count of used wheels and window selections must be equal"
 
-        self.wheels = [ ROTOR_I, ROTOR_II, ROTOR_III ]
+        self.wheels = [ ROTOR_III, ROTOR_II, ROTOR_I ]
+
+
+    @property
+    def windows(self):
+        return [ rotor.window for rotor in self.wheels ]
 
 
     def step(self):
-        raise NotImplementedError
+        l_wheel, m_wheel, r_wheel = self.wheels
+
+        # Step the rightmost rotor every step; Turnover mid rotor as req
+        # Doublestep midrotor as required
+        if r_wheel.step() or m_wheel.window == m_wheel.turnover:
+            if m_wheel.step():
+                l_wheel.step()
 
 
     def configure_plugboard(self):
         raise NotImplementedError
 
 
-    def configure_rotor(self, rotor, window_setting="A", ring_position="A"):
-        raise NotImplementedError
+    def configure_rotors(self, window_setting=["A", "A", "A"], ring_position=["A", "A", "A"]):
+        for idx, setting in enumerate(zip(window_setting, ring_position)):
+            self.wheels[idx].configure(setting[0], setting[1])
 
 
     def configure_rotor_order(self, rotor_order):
