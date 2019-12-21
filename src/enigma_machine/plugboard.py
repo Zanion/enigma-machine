@@ -1,4 +1,7 @@
-from enigma_machine.wire import Wire
+from collections import namedtuple
+
+
+Plug = namedtuple("Plug", "left right")
 
 
 class PlugBoard:

@@ -1,6 +1,8 @@
 from collections import namedtuple
 from enigma_machine.conf.defaults import ALPHABET
-from enigma_machine.wire import Wire
+
+
+Wire = namedtuple("Wire", "l_contact r_contact")
 
 
 class Rotor:
