@@ -28,16 +28,27 @@ class Enigma:
     """
 
 
-    def __init__(self, used_rotors=["III", "II", "I"], window_pos=['A', 'A', 'A']):
-
-        assert len(used_rotors) == len(window_pos), "Count of used rotors and window selections must be equal"
-
-        self.rotors = [ ROTOR_III, ROTOR_II, ROTOR_I ]
+    def __init__(self, rotor_order=["III", "II", "I"]):
+        self.configure_rotor_order(rotor_order)
 
 
     @property
     def windows(self):
         return [ rotor.window for rotor in self.rotors ]
+
+
+    @property
+    def rotors(self):
+        return self._rotors
+
+
+    @rotors.setter
+    def rotors(self, rotors):
+        """
+        """
+        for rotor in rotors:
+            assert rotor, f"Rotor {rotor} must {ROTOR_DB.keys()}"
+        self._rotors = [ ROTOR_DB.get(rotor) for rotor in rotors ]
 
 
     def step(self):
@@ -60,7 +71,7 @@ class Enigma:
 
 
     def configure_rotor_order(self, rotor_order):
-        raise NotImplementedError
+        self.rotors = rotor_order
 
 
     def encrypt_message(self, message):
