@@ -35,7 +35,7 @@ class Enigma:
         l_wheel, m_wheel, r_wheel = self.wheels
 
         # Step the rightmost rotor every step; Turnover mid rotor as req
-        # Doublestep midrotor as required
+        # Doublestep midrotor on r_wheel turnover and on mid wheel turnover
         if r_wheel.step() or m_wheel.window == m_wheel.turnover:
             if m_wheel.step():
                 l_wheel.step()
