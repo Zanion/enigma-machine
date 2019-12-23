@@ -1,20 +1,21 @@
-from enigma_machine.rotor import Rotor
 from enigma_machine.conf.defaults import *
-
-
-ROTOR_I = Rotor("I", ROTOR_I_WIRE_MAPPING, "Y")
-ROTOR_II = Rotor("II", ROTOR_II_WIRE_MAPPING, "M")
-ROTOR_III = Rotor("III", ROTOR_III_WIRE_MAPPING, "D")
-ROTOR_IV = Rotor("IV", ROTOR_IV_WIRE_MAPPING, "R")
-ROTOR_V = Rotor("V", ROTOR_V_WIRE_MAPPING, "H")
+from enigma_machine.rotor import Rotor
+from enigma_machine.reflector import Reflector
+from enigma_machine.plugboard import Plugboard
 
 
 ROTOR_DB = {
-    "I": ROTOR_I,
-    "II": ROTOR_II,
-    "III": ROTOR_III,
-    "IV": ROTOR_IV,
-    "V": ROTOR_V
+    "I": Rotor("I", ROTOR_I_WIRE_MAPPING, "Y"),
+    "II": Rotor("II", ROTOR_II_WIRE_MAPPING, "M"),
+    "III": Rotor("III", ROTOR_III_WIRE_MAPPING, "D"),
+    "IV": Rotor("IV", ROTOR_IV_WIRE_MAPPING, "R"),
+    "V": Rotor("V", ROTOR_V_WIRE_MAPPING, "H")
+}
+
+REFLECTOR_DB = {
+    "UKW-A": Reflector("EJMZALYXVBWFCRQUONTSPIKHGD"),
+    "UKW-B": Reflector("YRUHQSLDPXNGOKMIEBFZCWVJAT"),
+    "UKW-C": Reflector("FVPJIAOYEDRZXWGCTKUQSBNMHL")
 }
 
 
@@ -28,8 +29,10 @@ class Enigma:
     """
 
 
-    def __init__(self, rotor_order=["III", "II", "I"]):
+    def __init__(self, rotor_order=["III", "II", "I"], reflector=REFLECTOR_DB["UKW-A"]):
+        self.reflector = reflector
         self.configure_rotor_order(rotor_order)
+        self.plugboard = Plugboard()
 
 
     @property
