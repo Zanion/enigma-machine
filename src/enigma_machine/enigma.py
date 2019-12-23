@@ -12,6 +12,7 @@ ROTOR_DB = {
     "V": Rotor("V", ROTOR_V_WIRE_MAPPING, "H")
 }
 
+
 REFLECTOR_DB = {
     "UKW-A": Reflector("EJMZALYXVBWFCRQUONTSPIKHGD"),
     "UKW-B": Reflector("YRUHQSLDPXNGOKMIEBFZCWVJAT"),
@@ -64,8 +65,12 @@ class Enigma:
                 l_rotor.step()
 
 
-    def configure_plugboard(self):
-        raise NotImplementedError
+    def configure_plugboard(self, plugs=None, replace=False):
+        self.plugboard.configure_plugs(plugs, replace)
+
+
+    def clear_plugboard(self):
+        self.plugboard.clear_plugs()
 
 
     def configure_rotors(self, window_setting=["A", "A", "A"], ring_position=["A", "A", "A"]):
