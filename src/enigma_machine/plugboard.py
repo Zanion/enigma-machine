@@ -1,11 +1,11 @@
 from collections import namedtuple
-from enigma_machine.defaults import ALPHABET
+from enigma_machine.conf.defaults import ALPHABET
 
 
 MAX_PLUGS = 13
 
 
-class PlugBoard:
+class Plugboard:
 
 
     def __init__(self, plugs=None, alphabet=ALPHABET, max_plugs=MAX_PLUGS):
@@ -41,7 +41,10 @@ class PlugBoard:
         if replace:
             self.plugs = {}
 
-        for plug in plugs if plugs not None:
+        if not plugs:
+            return
+
+        for plug in plugs:
             self.add_plug(plug)
 
 
