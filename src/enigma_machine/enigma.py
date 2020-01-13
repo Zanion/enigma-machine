@@ -83,17 +83,39 @@ class Enigma:
 
 
     def encrypt_message(self, message):
-        raise NotImplementedError
+        out = ""
+        for letter in message:
+            out += self.encrypt_letter(letter)
+        return out
 
 
     def decrypt_message(self, message):
-        self.encrypt_message(message)
+        return self.encrypt_message(message)
 
 
     def encrypt_letter(self, letter):
-        raise NotImplementedError
+        """
+        """
+        # Go through plugboard
+        letter = self.plugboard.swap(letter)
+
+        # Step the rotors before sending signal through
+        self.step()
+
+        # Forward Pass
+        encoded_letter = letter
+        for rotor in self.rotors[::-1]:
+           encoded_letter = rotor.encode(encoded_letter)
+
+        # Reflect and Reverse Pass
+        encoded_letter = self.reflector.encode(encoded_letter)
+        for rotor in self.rotors:
+            encoded_letter = rotor.encode(encoded_letter, forward=False)
+
+        # Output swap
+        return self.plugboard.swap(encoded_letter)
 
 
     def decrypt_letter(self, letter):
-        self.encrypt_letter(letter)
+        return self.encrypt_letter(letter)
 
