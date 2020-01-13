@@ -69,3 +69,8 @@ class Plugboard:
         self.plugs[letter1] = letter2
         self.plugs[letter2] = letter1
 
+
+    def swap(self, letter):
+        if letter in self.plugs:
+            return self.plugs[letter]
+        return letter
