@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 
+# Add a comment to setup.py
 setup(
     name='enigma-machine',
     version='0.0.1',
