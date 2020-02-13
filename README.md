@@ -5,6 +5,8 @@ Status: Under Development
 ### Summary
 Engima machine simulator in Python
 
+I added a new feature <HERE>
+
 ### References
  - [1] - Ostwald, Olaf, and Frode Weierud. “Modern Breaking of Enigma Ciphertexts.” Cryptologia, vol. 41, no. 5, 2017, pp. 395–421., doi:10.1080/01611194.2016.1238423
  - [2] - Rijmenants, Dirk. “Technical Details of the Enigma Machine.” Technical Details of the Enigma Machine, 2017, users.telenet.be/d.rijmenants/en/enigmatech.htm
